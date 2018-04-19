@@ -70,7 +70,7 @@ var transactions = (function(){
 		transactions = [];
 		$(".accounts .account a").removeClass("selected");
 		$(".accounts .account a[data-id='" + accNbr + "']").addClass("selected");
-		setBalanceUI(accounts[0].balance);
+		setBalanceUI(selectedAccount.balance);
 		updateTransactions(accNbr, currentPage);
 	};
 

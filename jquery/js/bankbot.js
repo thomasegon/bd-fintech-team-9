@@ -6,6 +6,7 @@ var bot = (function(){
 	"use strict";
 
 	var annoyanceCounter;
+    var lastMessage;
     var annoyanceBurst = 3;
 
 	var _init = function(){
@@ -30,6 +31,13 @@ var bot = (function(){
         $("#user-msg").val("");
         insertChatMessage("self", clientmsg);
         service.fetchBotIntent(clientmsg, function(response){
+            if(clientmsg == lastMessage){
+                annoyanceCounter+= 1;
+            }
+            else{
+                lastMessage = clientmsg;
+                annoyanceCounter = 0;
+            }
             let handledResponse = handleBotResponse(response);
             insertChatMessage("bot", handledResponse);
         });
@@ -56,17 +64,17 @@ var bot = (function(){
         });
         let intentMsg;
         console.log(response);
+        if(annoyanceCounter >= annoyanceBurst){
+            return "Hvad vil du mig?!";
+        }
         switch(intent){
             case "Budgetkonto":
-                annoyanceCounter = 0;
                 intentMsg = "Budgetkonto";
                 break;
             case "Overblik":
-                annoyanceCounter = 0;
                 intentMsg = "Overblik";
                 break;
             case "Hilsen":
-                annoyanceCounter++;
                 intentMsg = welcomeMessage();
                 break;
             default:
